@@ -117,7 +117,7 @@ public class Reception extends JFrame {
         });
 
         JButton btnCO = new JButton("Check Out");
-        btnCO.setBounds(30,270,200,30);
+        btnCO.setBounds(30,270,200,30); // نفس القيمة
         btnCO.setBackground(Color.BLACK);
         btnCO.setForeground(Color.WHITE);
         panel1.add(btnCO);
@@ -133,7 +133,7 @@ public class Reception extends JFrame {
         });
 
         JButton btnUC = new JButton("Update Check-In Details");
-        btnUC.setBounds(30,310,200,30);
+        btnUC.setBounds(30,310,200,30); // نفس القيمة
         btnUC.setBackground(Color.BLACK);
         btnUC.setForeground(Color.WHITE);
         panel1.add(btnUC);
@@ -149,7 +149,7 @@ public class Reception extends JFrame {
         });
 
         JButton btnURS = new JButton("Update Room Status");
-        btnURS.setBounds(30,350,200,30);
+        btnURS.setBounds(30,350,200,30); // نفس القيمة
         btnURS.setBackground(Color.BLACK);
         btnURS.setForeground(Color.WHITE);
         panel1.add(btnURS);
@@ -164,24 +164,8 @@ public class Reception extends JFrame {
             }
         });
 
-        JButton btnPUS = new JButton("Pick up Service");
-        btnPUS.setBounds(30,390,200,30);
-        btnPUS.setBackground(Color.BLACK);
-        btnPUS.setForeground(Color.WHITE);
-        panel1.add(btnPUS);
-        btnPUS.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    new PickUp();
-                }catch (Exception E){
-                    E.printStackTrace();
-                }
-            }
-        });
-
         JButton btnSR = new JButton("Search Room");
-        btnSR.setBounds(30,430,200,30);
+        btnSR.setBounds(30,390,200,30); // تم تحريكها بدل مكان Pick Up Service
         btnSR.setBackground(Color.BLACK);
         btnSR.setForeground(Color.WHITE);
         panel1.add(btnSR);
@@ -189,12 +173,13 @@ public class Reception extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    new     SearchRoom();
+                    new SearchRoom();
                 }catch (Exception E){
                     E.printStackTrace();
                 }
             }
         });
+
 
         JButton logout = new JButton("Logout");
         logout.setBounds(30,470,95,30);

@@ -101,7 +101,7 @@ public class AddEmployee extends JFrame implements ActionListener {
         phoneText.setForeground(Color.WHITE);
         panel.add(phoneText);
 
-        JLabel aadhar = new JLabel("AADHAR");
+        JLabel aadhar = new JLabel("id_number");
         aadhar.setBounds(60,320,150,27);
         aadhar.setFont(new Font("serif", Font.BOLD, 17));
         aadhar.setForeground(Color.WHITE);
@@ -145,12 +145,7 @@ public class AddEmployee extends JFrame implements ActionListener {
         back.addActionListener(this);
         panel.add(back);
 
-        ImageIcon imageIcon = new ImageIcon(ClassLoader.getSystemResource("icon/addemp.png"));
-        Image image = imageIcon.getImage().getScaledInstance(300,300,Image.SCALE_DEFAULT);
-        ImageIcon imageIcon1 = new ImageIcon(image);
-        JLabel label = new JLabel(imageIcon1);
-        label.setBounds(500,100,300,300);
-        panel.add(label);
+
 
 
         setUndecorated(true);
@@ -168,7 +163,7 @@ public class AddEmployee extends JFrame implements ActionListener {
             String salary = salaryText.getText();
             String phone = phoneText.getText();
             String email = emailText.getText();
-            String aadhar = aadharText.getText();
+            String id_number = aadharText.getText();
             String job = (String) comboBox.getSelectedItem();
             String gender = null;
             if (radioButtonM.isSelected()){
@@ -179,7 +174,18 @@ public class AddEmployee extends JFrame implements ActionListener {
 
             try{
                 Con c = new Con();
-                String q = "insert into employee values('"+name+"', '"+age+"', '"+gender+"', '"+job+"', '"+salary+"','"+phone+"', '"+email+"', '"+aadhar+"')";
+                String q =
+                        "INSERT INTO employee(name, age, gender, job, salary, phone, email, id_number) " +
+                                "VALUES ('" + name + "', '" + age + "', '" + gender + "', '" + job + "', '" + salary + "', '" + phone + "', '" + email + "', '" + id_number + "')";
+//                System.out.println(name);
+//                System.out.println(age);
+//                System.out.println(gender);
+//                System.out.println(job);
+//                System.out.println(salary);
+//                System.out.println(phone);
+//                System.out.println(email);
+//                System.out.println(id_number);
+
                 c.statement.executeUpdate(q);
                 JOptionPane.showMessageDialog(null,"Employee Added");
                 setVisible(false);

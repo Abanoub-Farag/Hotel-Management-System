@@ -27,7 +27,7 @@ public class CustomerInfo extends JFrame {
         try {
 
             Con c = new Con();
-            String q = "select * from Customer";
+            String q = "select * from customer";
             ResultSet resultSet = c.statement.executeQuery(q);
             table.setModel(DbUtils.resultSetToTableModel(resultSet));
 

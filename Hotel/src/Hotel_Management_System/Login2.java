@@ -36,11 +36,6 @@ public class Login2 extends JFrame implements ActionListener {
         passwordField1.setBackground(new Color(26,104,110));
         add(passwordField1);
 
-        ImageIcon imageIcon = new ImageIcon(ClassLoader.getSystemResource("icon/login.gif"));
-        Image i1 = imageIcon.getImage().getScaledInstance(255,300,Image.SCALE_DEFAULT);
-        JLabel label = new JLabel(imageIcon);
-        label.setBounds(318,-30,255,300);
-        add(label);
 
         b1 = new JButton("Login");
         b1.setBounds(40,140,120,30);
