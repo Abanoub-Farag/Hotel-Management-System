@@ -35,6 +35,8 @@ create table if not exists room (
     bed_type varchar(20)
 );
 
+-- select * from room;
+
 -- customers table
 -- drop table customer;
 create table if not exists customer (
