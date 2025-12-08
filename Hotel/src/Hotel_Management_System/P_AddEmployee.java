@@ -5,15 +5,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.Expression;
 
-public class AddEmployee extends JFrame implements ActionListener {
+public class P_AddEmployee extends JFrame implements ActionListener {
 
     JTextField nameText, ageText, salaryText, phoneText, aadharText, emailText;
     JRadioButton radioButtonM, radioButtonF;
     JComboBox comboBox;
     JButton add,back;
-    AddEmployee(){
+    P_AddEmployee(){
         JPanel panel = new JPanel();
         panel.setBounds(5,5,890,490);
         panel.setLayout(null);
@@ -173,7 +172,7 @@ public class AddEmployee extends JFrame implements ActionListener {
             }
 
             try{
-                Con c = new Con();
+                Z_Con c = new Z_Con();
                 String q =
                         "INSERT INTO employee(name, age, gender, job, salary, phone, email, id_number) " +
                                 "VALUES ('" + name + "', '" + age + "', '" + gender + "', '" + job + "', '" + salary + "', '" + phone + "', '" + email + "', '" + id_number + "')";
@@ -196,11 +195,11 @@ public class AddEmployee extends JFrame implements ActionListener {
 
 
         }else{
-            setVisible(false);
+            new D_admin();
         }
     }
 
     public static void main(String[] args) {
-        new AddEmployee();
+        new P_AddEmployee();
     }
 }

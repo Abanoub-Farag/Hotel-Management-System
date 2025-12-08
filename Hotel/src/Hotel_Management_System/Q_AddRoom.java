@@ -5,11 +5,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AddRoom extends JFrame implements ActionListener {
+public class Q_AddRoom extends JFrame implements ActionListener {
     JTextField t2,t4;
     JComboBox t3,t5,t6;
     JButton b1,b2;
-    AddRoom(){
+    Q_AddRoom(){
 
         JPanel panel = new JPanel();
         panel.setBounds(5,5,875,490);
@@ -118,7 +118,7 @@ public class AddRoom extends JFrame implements ActionListener {
 
         if (e.getSource() == b1){
             try{
-                Con c = new Con();
+                Z_Con c = new Z_Con();
                 String room = t2.getText();
                 String ava = (String) t3.getSelectedItem();
                 String status = (String)  t5.getSelectedItem();
@@ -135,12 +135,12 @@ public class AddRoom extends JFrame implements ActionListener {
                 E.printStackTrace();
             }
         }else {
-            setVisible(false);
+            new D_admin();
         }
 
     }
 
     public static void main(String[] args) {
-        new AddRoom();
+        new Q_AddRoom();
     }
 }

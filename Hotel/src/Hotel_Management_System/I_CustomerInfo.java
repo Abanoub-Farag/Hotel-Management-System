@@ -9,8 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 
-public class CustomerInfo extends JFrame {
-    CustomerInfo(){
+public class I_CustomerInfo extends JFrame {
+    I_CustomerInfo(){
 
         JPanel panel = new JPanel();
         panel.setBounds(5,5,890,590);
@@ -26,7 +26,7 @@ public class CustomerInfo extends JFrame {
 
         try {
 
-            Con c = new Con();
+            Z_Con c = new Z_Con();
             String q = "select * from customer";
             ResultSet resultSet = c.statement.executeQuery(q);
             table.setModel(DbUtils.resultSetToTableModel(resultSet));
@@ -103,6 +103,6 @@ public class CustomerInfo extends JFrame {
         setVisible(true);
     }
     public static void main(String[] args) {
-        new CustomerInfo();
+        new I_CustomerInfo();
     }
 }

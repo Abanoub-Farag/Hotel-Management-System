@@ -4,11 +4,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 
-public class Con {
+public class Z_Con {
     Connection connection;
     Statement statement;
 
-    public Con(){
+    public Z_Con(){
         try {
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/hotelMS", "root", "2006");
             statement = connection.createStatement();

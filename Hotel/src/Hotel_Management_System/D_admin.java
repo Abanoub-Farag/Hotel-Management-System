@@ -5,12 +5,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class admin extends JFrame implements ActionListener {
+public class D_admin extends JFrame implements ActionListener {
     private JPanel mainPanel, buttonPanel, headerPanel, footerPanel;
     private JLabel titleLabel, subtitleLabel;
     private JButton addEmployeeBtn, addRoomBtn, addDriversBtn, logoutBtn, backBtn;
 
-    admin() {
+    D_admin() {
         super("Admin Dashboard - Hotel Management System");
 
         // Set up main panel with gradient background
@@ -171,10 +171,10 @@ public class admin extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == addEmployeeBtn) {
-            new AddEmployee();
+            new P_AddEmployee();
             this.setVisible(false);
         } else if (e.getSource() == addRoomBtn) {
-            new AddRoom();
+            new Q_AddRoom();
             this.setVisible(false);
         } else if (e.getSource() == addDriversBtn) {
             // You can create AddDrivers class later
@@ -190,7 +190,7 @@ public class admin extends JFrame implements ActionListener {
                 System.exit(0);
             }
         } else if (e.getSource() == backBtn) {
-            new Dashboard();
+            new B_Dashboard();
             this.setVisible(false);
         }
     }
@@ -204,7 +204,7 @@ public class admin extends JFrame implements ActionListener {
         }
 
         SwingUtilities.invokeLater(() -> {
-            new admin();
+            new D_admin();
         });
     }
 }

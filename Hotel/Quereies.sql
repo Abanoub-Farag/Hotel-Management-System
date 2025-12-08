@@ -12,8 +12,6 @@ create table if not exists login(
 -- insert into login (username, password)
 -- values ("user", "123456789"), ("a", "a");
 
--- select * from login;
-
 
 -- Admins login
 create table if not exists login2(
@@ -24,8 +22,6 @@ create table if not exists login2(
 -- insert into login2 (user_name, password)
 -- values ("user", "123456789"), ("a", "a");
 
--- select * from login2;
-
 -- Room table
 create table if not exists room (
     roomnumber int primary key,
@@ -34,8 +30,6 @@ create table if not exists room (
     price int,
     bed_type varchar(20)
 );
-
--- select * from room;
 
 -- customers table
 -- drop table customer;
@@ -62,10 +56,6 @@ create table if not exists employee (
     id_number varchar(100)
 );
 
--- select * from employee;
-
--- select * from customer;
-
 -- Depratments table
 -- drop table department;
 create table if not exists department(
@@ -84,7 +74,13 @@ create table if not exists department(
 -- (6, "Accountant", 10000),
 -- (7, "Chef", 12000);
 
+
 -- select * from department
+-- select * from customer 
+-- select * from employee
+-- select * from login
+ select * from login2
+-- select * from room
 
 
 
