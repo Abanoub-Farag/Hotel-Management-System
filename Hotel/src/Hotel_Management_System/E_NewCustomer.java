@@ -7,14 +7,16 @@ import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.sql.PreparedStatement;
 
 public class E_NewCustomer extends JFrame implements ActionListener {
     JComboBox<String> comboBox;
-    JTextField textFieldNumber, TextName, TextCountry, TextDeposite;
+    JTextField textFieldNumber, TextName, TextCountry, TextDeposite, TextEmail, TextPhone;
     JRadioButton r1, r2;
-    Choice c1;
+    JComboBox<String> roomComboBox; // CHANGED: Use JComboBox instead of Choice
     JLabel dateLabel;
     JButton add, back;
+    private JTextField lastNameField;
 
     public E_NewCustomer() {
         super("New Customer Registration");
@@ -26,7 +28,6 @@ public class E_NewCustomer extends JFrame implements ActionListener {
 
         // إنشاء لوحة رئيسية مع خلفية متدرجة
         JPanel mainPanel = new JPanel() {
-
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -42,7 +43,7 @@ public class E_NewCustomer extends JFrame implements ActionListener {
             }
         };
         mainPanel.setLayout(null);
-        mainPanel.setBounds(0, 0, 1000, 650); // زيادة الحجم لاستيعاب المحتوى
+        mainPanel.setBounds(0, 0, 1060, 720);
 
         // لوحة النموذج الرئيسية مع ScrollPane
         JPanel formPanel = new JPanel() {
@@ -63,7 +64,7 @@ public class E_NewCustomer extends JFrame implements ActionListener {
             }
         };
         formPanel.setLayout(null);
-        formPanel.setPreferredSize(new Dimension(950, 550)); // حجم أكبر للنموذج
+        formPanel.setPreferredSize(new Dimension(950, 650));
 
         // عنوان النموذج
         JLabel labelName = new JLabel("✨ NEW CUSTOMER REGISTRATION ✨");
@@ -80,15 +81,17 @@ public class E_NewCustomer extends JFrame implements ActionListener {
         formPanel.add(separator);
 
         // Column 1 - اليسار (الحقول الأساسية)
+        int yPos = 120;
+
         // ID Type
         JLabel labelID = new JLabel("ID Type:");
-        labelID.setBounds(100, 120, 180, 25);
+        labelID.setBounds(100, yPos, 180, 25);
         labelID.setForeground(new Color(240, 240, 240));
         labelID.setFont(new Font("Segoe UI", Font.BOLD, 16));
         formPanel.add(labelID);
 
-        comboBox = new JComboBox<>(new String[]{"Passport", "Voter Id", "Driving License"});
-        comboBox.setBounds(320, 120, 250, 35);
+        comboBox = new JComboBox<>(new String[]{"Passport", "Driving License", "National ID"});
+        comboBox.setBounds(320, yPos, 250, 35);
         comboBox.setBackground(new Color(255, 255, 255, 30));
         comboBox.setForeground(Color.WHITE);
         comboBox.setFont(new Font("Segoe UI", Font.PLAIN, 14));
@@ -98,37 +101,82 @@ public class E_NewCustomer extends JFrame implements ActionListener {
         ));
         formPanel.add(comboBox);
 
-        // ID Number
+        yPos += 50;
+
+        // ID Number (Customer ID)
         JLabel labelNumber = new JLabel("ID Number:");
-        labelNumber.setBounds(100, 170, 180, 25);
+        labelNumber.setBounds(100, yPos, 180, 25);
         labelNumber.setForeground(new Color(240, 240, 240));
         labelNumber.setFont(new Font("Segoe UI", Font.BOLD, 16));
         formPanel.add(labelNumber);
 
         textFieldNumber = createStyledTextField();
-        textFieldNumber.setBounds(320, 170, 250, 35);
+        textFieldNumber.setBounds(320, yPos, 250, 35);
         formPanel.add(textFieldNumber);
 
-        // Name
-        JLabel labelNameField = new JLabel("Full Name:");
-        labelNameField.setBounds(100, 220, 180, 25);
-        labelNameField.setForeground(new Color(240, 240, 240));
-        labelNameField.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        formPanel.add(labelNameField);
+        yPos += 50;
+
+        // First Name
+        JLabel labelFirstName = new JLabel("First Name:");
+        labelFirstName.setBounds(100, yPos, 180, 25);
+        labelFirstName.setForeground(new Color(240, 240, 240));
+        labelFirstName.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        formPanel.add(labelFirstName);
 
         TextName = createStyledTextField();
-        TextName.setBounds(320, 220, 250, 35);
+        TextName.setBounds(320, yPos, 250, 35);
         formPanel.add(TextName);
+
+        yPos += 50;
+
+        // Last Name
+        JLabel labelLastName = new JLabel("Last Name:");
+        labelLastName.setBounds(100, yPos, 180, 25);
+        labelLastName.setForeground(new Color(240, 240, 240));
+        labelLastName.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        formPanel.add(labelLastName);
+
+        lastNameField = createStyledTextField();
+        lastNameField.setBounds(320, yPos, 250, 35);
+        formPanel.add(lastNameField);
+
+        yPos += 50;
+
+        // Email
+        JLabel labelEmail = new JLabel("Email:");
+        labelEmail.setBounds(100, yPos, 180, 25);
+        labelEmail.setForeground(new Color(240, 240, 240));
+        labelEmail.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        formPanel.add(labelEmail);
+
+        TextEmail = createStyledTextField();
+        TextEmail.setBounds(320, yPos, 250, 35);
+        formPanel.add(TextEmail);
+
+        yPos += 50;
+
+        // Phone
+        JLabel labelPhone = new JLabel("Phone:");
+        labelPhone.setBounds(100, yPos, 180, 25);
+        labelPhone.setForeground(new Color(240, 240, 240));
+        labelPhone.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        formPanel.add(labelPhone);
+
+        TextPhone = createStyledTextField();
+        TextPhone.setBounds(320, yPos, 250, 35);
+        formPanel.add(TextPhone);
+
+        yPos += 50;
 
         // Gender
         JLabel labelGender = new JLabel("Gender:");
-        labelGender.setBounds(100, 270, 180, 25);
+        labelGender.setBounds(100, yPos, 180, 25);
         labelGender.setForeground(new Color(240, 240, 240));
         labelGender.setFont(new Font("Segoe UI", Font.BOLD, 16));
         formPanel.add(labelGender);
 
         JPanel genderPanel = new JPanel();
-        genderPanel.setBounds(320, 270, 250, 35);
+        genderPanel.setBounds(320, yPos, 250, 35);
         genderPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 5));
         genderPanel.setOpaque(false);
 
@@ -143,50 +191,56 @@ public class E_NewCustomer extends JFrame implements ActionListener {
         genderGroup.add(r2);
         formPanel.add(genderPanel);
 
+        yPos += 50;
+
         // Country
         JLabel labelCountry = new JLabel("Country:");
-        labelCountry.setBounds(100, 320, 180, 25);
+        labelCountry.setBounds(100, yPos, 180, 25);
         labelCountry.setForeground(new Color(240, 240, 240));
         labelCountry.setFont(new Font("Segoe UI", Font.BOLD, 16));
         formPanel.add(labelCountry);
 
         TextCountry = createStyledTextField();
-        TextCountry.setBounds(320, 320, 250, 35);
+        TextCountry.setBounds(320, yPos, 250, 35);
         formPanel.add(TextCountry);
 
-        // Room number
+        yPos += 50;
+
+        // Room number - FIXED: Use JComboBox instead of Choice
         JLabel labelRoom = new JLabel("Allocated Room:");
-        labelRoom.setBounds(100, 370, 180, 25);
+        labelRoom.setBounds(100, yPos, 180, 25);
         labelRoom.setForeground(new Color(240, 240, 240));
         labelRoom.setFont(new Font("Segoe UI", Font.BOLD, 16));
         formPanel.add(labelRoom);
 
-        c1 = new Choice();
-        try {
-            Z_Con c = new Z_Con();
-            ResultSet rs = c.statement.executeQuery("SELECT roomnumber FROM room WHERE availability='Available'");
-            while (rs.next()) {
-                c1.add(rs.getString("roomnumber"));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        c1.setBounds(320, 370, 250, 35);
-        c1.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        c1.setForeground(Color.WHITE);
-        c1.setBackground(new Color(255, 255, 255, 30));
-        formPanel.add(c1);
+        // Create JComboBox for rooms
+        roomComboBox = new JComboBox<>();
+        roomComboBox.setBounds(320, yPos, 250, 35);
+        roomComboBox.setBackground(new Color(255, 255, 255, 30));
+        roomComboBox.setForeground(Color.WHITE);
+        roomComboBox.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        roomComboBox.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(255, 215, 0, 100), 1),
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)
+        ));
+
+        // Load available rooms
+        loadAvailableRooms();
+
+        formPanel.add(roomComboBox);
 
         // Column 2 - اليمين (المعلومات الإضافية)
+        int yPosRight = 120;
+
         // Check-in date
-        JLabel labelCIS = new JLabel("Check-in Time:");
-        labelCIS.setBounds(620, 120, 180, 25);
+        JLabel labelCIS = new JLabel("Check-in Date:");
+        labelCIS.setBounds(620, yPosRight, 180, 25);
         labelCIS.setForeground(new Color(240, 240, 240));
         labelCIS.setFont(new Font("Segoe UI", Font.BOLD, 16));
         formPanel.add(labelCIS);
 
         JPanel datePanel = new JPanel();
-        datePanel.setBounds(770, 120, 200, 35);
+        datePanel.setBounds(770, yPosRight, 200, 35);
         datePanel.setLayout(new BorderLayout());
         datePanel.setBackground(new Color(255, 255, 255, 30));
         datePanel.setBorder(BorderFactory.createLineBorder(new Color(255, 215, 0, 100), 1));
@@ -198,20 +252,24 @@ public class E_NewCustomer extends JFrame implements ActionListener {
         datePanel.add(dateLabel, BorderLayout.CENTER);
         formPanel.add(datePanel);
 
+        yPosRight += 50;
+
         // Deposit
         JLabel labelDeposit = new JLabel("Deposit ($):");
-        labelDeposit.setBounds(620, 170, 180, 25);
+        labelDeposit.setBounds(620, yPosRight, 180, 25);
         labelDeposit.setForeground(new Color(240, 240, 240));
         labelDeposit.setFont(new Font("Segoe UI", Font.BOLD, 16));
         formPanel.add(labelDeposit);
 
         TextDeposite = createStyledTextField();
-        TextDeposite.setBounds(770, 170, 200, 35);
+        TextDeposite.setBounds(770, yPosRight, 200, 35);
         formPanel.add(TextDeposite);
 
-        // Info panel على اليمين - أعلى لتجنب التداخل مع الأزرار
+        yPosRight += 50;
+
+        // Info panel على اليمين
         JPanel infoPanel = new JPanel();
-        infoPanel.setBounds(620, 220, 350, 180); // زيادة العرض والموقع
+        infoPanel.setBounds(620, yPosRight, 350, 200);
         infoPanel.setLayout(new BorderLayout());
         infoPanel.setBackground(new Color(255, 255, 255, 15));
         infoPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -225,8 +283,8 @@ public class E_NewCustomer extends JFrame implements ActionListener {
                 "• ID verification is required\n" +
                 "• Deposit is refundable at checkout\n" +
                 "• Room allocation is final\n" +
-                "• Contact reception for assistance\n" +
-                "• All fields marked with * are required");
+                "• All fields are required\n" +
+                "• Email and phone must be valid");
         infoText.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         infoText.setForeground(new Color(220, 220, 255));
         infoText.setBackground(new Color(255, 255, 255, 0));
@@ -237,14 +295,14 @@ public class E_NewCustomer extends JFrame implements ActionListener {
         infoPanel.add(infoText, BorderLayout.CENTER);
         formPanel.add(infoPanel);
 
-        // Buttons Panel - في الأسفل مع مساحة أكبر
+        // Buttons Panel
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setBounds(250, 450, 500, 60); // توسيع المساحة للأزرار
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 40, 0)); // زيادة المسافة بين الأزرار
+        buttonPanel.setBounds(250, 580, 500, 60);
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 40, 0));
         buttonPanel.setOpaque(false);
 
-        add = createStyledButton("➕ ADD CUSTOMER", new Color(60, 179, 113), 200); // Green - عرض أكبر
-        back = createStyledButton("↩️ BACK TO DASHBOARD", new Color(70, 130, 180), 200); // Blue - عرض أكبر
+        add = createStyledButton("➕ ADD CUSTOMER", new Color(60, 179, 113), 200);
+        back = createStyledButton("↩️ BACK TO DASHBOARD", new Color(70, 130, 180), 200);
 
         buttonPanel.add(add);
         buttonPanel.add(back);
@@ -257,22 +315,57 @@ public class E_NewCustomer extends JFrame implements ActionListener {
         scrollPane.setBorder(null);
         scrollPane.getViewport().setBackground(new Color(0, 0, 0, 0));
         scrollPane.setOpaque(false);
-        scrollPane.getViewport().setOpaque(false);
 
-        // إخفاء شريط التمرير إذا لم يكن ضرورياً
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
         mainPanel.add(scrollPane);
 
-        // إضافة جميع المكونات
         add(mainPanel);
 
         setLayout(null);
-        setSize(1000, 650); // أولاً: تعيين الحجم
-        setLocationRelativeTo(null); // ثانياً: التوسيط بعد معرفة الحجم
-        setResizable(false); // ثالثاً: إعداد قابلية تغيير الحجم
-        setVisible(true); // أخيراً: إظهار النافذة
+        setSize(1000, 650);
+        setLocationRelativeTo(null);
+        setResizable(false);
+        setVisible(true);
+    }
+
+    private void loadAvailableRooms() {
+        try {
+            Z_Con c = new Z_Con();
+
+            // Clear existing items
+            roomComboBox.removeAllItems();
+
+            String query = "SELECT room_number FROM room WHERE availability='Available' AND cleaning_status='Clean'";
+            System.out.println("Executing query: " + query);
+
+            ResultSet rs = c.statement.executeQuery(query);
+
+            int roomCount = 0;
+            while (rs.next()) {
+                String roomNumber = rs.getString("room_number");
+                roomComboBox.addItem(roomNumber);
+                roomCount++;
+                System.out.println("Added room: " + roomNumber);
+            }
+
+            System.out.println("Total available rooms: " + roomCount);
+
+            if (roomCount == 0) {
+                System.out.println("No rooms available!");
+                roomComboBox.addItem("No rooms available");
+            }
+
+            rs.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error loading rooms: " + e.getMessage());
+
+            roomComboBox.removeAllItems();
+            roomComboBox.addItem("Error loading rooms");
+        }
     }
 
     private JTextField createStyledTextField() {
@@ -296,7 +389,6 @@ public class E_NewCustomer extends JFrame implements ActionListener {
         radio.setFocusPainted(false);
         radio.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        // تخصيص الأيقونة
         radio.setIcon(new Icon() {
             @Override
             public void paintIcon(Component c, Graphics g, int x, int y) {
@@ -333,7 +425,6 @@ public class E_NewCustomer extends JFrame implements ActionListener {
 
                 Color bgColor = getModel().isRollover() ? baseColor.brighter() : baseColor;
 
-                // تدرج لوني للزر
                 GradientPaint gradient = new GradientPaint(
                         0, 0, bgColor,
                         0, getHeight(), bgColor.darker()
@@ -341,7 +432,6 @@ public class E_NewCustomer extends JFrame implements ActionListener {
                 g2d.setPaint(gradient);
                 g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
 
-                // حدود ذهبية
                 g2d.setColor(new Color(255, 215, 0));
                 g2d.setStroke(new BasicStroke(1.5f));
                 g2d.drawRoundRect(1, 1, getWidth()-2, getHeight()-2, 15, 15);
@@ -355,7 +445,7 @@ public class E_NewCustomer extends JFrame implements ActionListener {
         button.setFocusPainted(false);
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
-        button.setPreferredSize(new Dimension(width, 45)); // عرض مخصص
+        button.setPreferredSize(new Dimension(width, 45));
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         button.addActionListener(this);
 
@@ -365,7 +455,6 @@ public class E_NewCustomer extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == add) {
-            // التحقق من الحقول المطلوبة
             if (!validateForm()) {
                 return;
             }
@@ -375,30 +464,114 @@ public class E_NewCustomer extends JFrame implements ActionListener {
 
             String idType = (String) comboBox.getSelectedItem();
             String idNumber = textFieldNumber.getText();
-            String name = TextName.getText();
+            String firstName = TextName.getText();
+            String lastName = lastNameField.getText();
+            String email = TextEmail.getText();
+            String phone = TextPhone.getText();
             String country = TextCountry.getText();
-            String roomNumber = c1.getSelectedItem();
-            String checkinTime = dateLabel.getText();
+            String roomNumber = (String) roomComboBox.getSelectedItem(); // CHANGED
+            String checkinDate = dateLabel.getText();
             String deposit = TextDeposite.getText();
 
             try {
-                String insertQuery = "INSERT INTO customer(id_type, id_number, name, gender, country, roomnumber, checkin_time, deposit) " +
-                        "VALUES ('" + idType + "', '" + idNumber + "', '" + name + "', '" + gender + "', '" + country + "', '" + roomNumber + "', '" + checkinTime + "', '" + deposit + "')";
-                String updateRoom = "UPDATE room SET availability='Occupied' WHERE roomnumber=" + roomNumber;
+                int customerId;
+                try {
+                    customerId = Integer.parseInt(idNumber);
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this,
+                            "Customer ID must be a number!",
+                            "Invalid ID",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
 
-                c.statement.executeUpdate(insertQuery);
-                c.statement.executeUpdate(updateRoom);
+                String checkQuery = "SELECT COUNT(*) FROM customer WHERE customer_id = ?";
+                PreparedStatement checkStmt = c.connection.prepareStatement(checkQuery);
+                checkStmt.setInt(1, customerId);
+                ResultSet rs = checkStmt.executeQuery();
+                if (rs.next() && rs.getInt(1) > 0) {
+                    JOptionPane.showMessageDialog(this,
+                            "Customer ID already exists! Please use a different ID.",
+                            "Duplicate ID",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
 
-                JOptionPane.showMessageDialog(this,
-                        "✅ Customer Added Successfully!\n" +
-                                "Name: " + name + "\n" +
-                                "Room: " + roomNumber + "\n" +
-                                "Check-in: " + checkinTime,
-                        "Registration Complete",
-                        JOptionPane.INFORMATION_MESSAGE);
+                String insertQuery = "INSERT INTO customer (customer_id, id_type, first_name, last_name, " +
+                        "email, phone, gender, country, checkin_date, deposit, room_number) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-                // إعادة تعيين النموذج
-                resetForm();
+                PreparedStatement pstmt = c.connection.prepareStatement(insertQuery);
+                pstmt.setInt(1, customerId);
+                pstmt.setString(2, idType);
+                pstmt.setString(3, firstName);
+                pstmt.setString(4, lastName);
+                pstmt.setString(5, email);
+                pstmt.setString(6, phone);
+                pstmt.setString(7, gender);
+                pstmt.setString(8, country);
+                pstmt.setString(9, checkinDate);
+                pstmt.setDouble(10, Double.parseDouble(deposit));
+                pstmt.setInt(11, Integer.parseInt(roomNumber));
+
+                int rowsInserted = pstmt.executeUpdate();
+
+                if (rowsInserted > 0) {
+                    String updateRoom = "UPDATE room SET availability='Occupied' WHERE room_number=" + roomNumber;
+                    c.statement.executeUpdate(updateRoom);
+
+                    try {
+                        String bookingQuery = "SELECT IFNULL(MAX(booking_id), 0) + 1 AS new_id FROM bookings";
+                        ResultSet bookingRs = c.statement.executeQuery(bookingQuery);
+                        int bookingId = 1;
+                        if (bookingRs.next()) {
+                            bookingId = bookingRs.getInt("new_id");
+                        }
+
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Date checkin = dateFormat.parse(checkinDate);
+                        Date checkout = new Date(checkin.getTime() + (24 * 60 * 60 * 1000));
+
+                        String priceQuery = "SELECT price FROM room WHERE room_number=" + roomNumber;
+                        ResultSet priceRs = c.statement.executeQuery(priceQuery);
+                        double totalAmount = 0;
+                        if (priceRs.next()) {
+                            totalAmount = priceRs.getDouble("price");
+                        }
+
+                        String insertBooking = "INSERT INTO bookings (booking_id, customer_id, room_number, " +
+                                "status, total_amount, checkin_date, checkout_date, booking_date) " +
+                                "VALUES (?, ?, ?, 'Active', ?, ?, ?, ?)";
+
+                        PreparedStatement bookingStmt = c.connection.prepareStatement(insertBooking);
+                        bookingStmt.setInt(1, bookingId);
+                        bookingStmt.setInt(2, customerId);
+                        bookingStmt.setInt(3, Integer.parseInt(roomNumber));
+                        bookingStmt.setDouble(4, totalAmount);
+                        bookingStmt.setString(5, checkinDate);
+                        bookingStmt.setString(6, dateFormat.format(checkout));
+                        bookingStmt.setString(7, checkinDate);
+
+                        bookingStmt.executeUpdate();
+
+                    } catch (Exception bookingEx) {
+                        bookingEx.printStackTrace();
+                    }
+
+                    JOptionPane.showMessageDialog(this,
+                            "✅ Customer Added Successfully!\n" +
+                                    "Customer ID: " + customerId + "\n" +
+                                    "Name: " + firstName + " " + lastName + "\n" +
+                                    "Room: " + roomNumber + "\n" +
+                                    "Check-in: " + checkinDate.substring(0, 16),
+                            "Registration Complete",
+                            JOptionPane.INFORMATION_MESSAGE);
+
+                    resetForm();
+                }
+
+                pstmt.close();
+
             } catch (Exception ex) {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(this,
@@ -408,20 +581,34 @@ public class E_NewCustomer extends JFrame implements ActionListener {
             }
         } else if (e.getSource() == back) {
             dispose();
-            // العودة للوحة الاستقبال
             new C_Reception();
         }
     }
 
     private boolean validateForm() {
         if (textFieldNumber.getText().trim().isEmpty()) {
-            showError("Please enter ID Number");
+            showError("Please enter Customer ID (must be a number)");
             textFieldNumber.requestFocus();
             return false;
         }
         if (TextName.getText().trim().isEmpty()) {
-            showError("Please enter Full Name");
+            showError("Please enter First Name");
             TextName.requestFocus();
+            return false;
+        }
+        if (lastNameField.getText().trim().isEmpty()) {
+            showError("Please enter Last Name");
+            lastNameField.requestFocus();
+            return false;
+        }
+        if (TextEmail.getText().trim().isEmpty()) {
+            showError("Please enter Email");
+            TextEmail.requestFocus();
+            return false;
+        }
+        if (TextPhone.getText().trim().isEmpty()) {
+            showError("Please enter Phone Number");
+            TextPhone.requestFocus();
             return false;
         }
         if (!r1.isSelected() && !r2.isSelected()) {
@@ -433,15 +620,26 @@ public class E_NewCustomer extends JFrame implements ActionListener {
             TextCountry.requestFocus();
             return false;
         }
-        if (c1.getSelectedItem() == null) {
+
+        String selectedRoom = (String) roomComboBox.getSelectedItem();
+        if (selectedRoom == null || selectedRoom.equals("No rooms available") || selectedRoom.equals("Error loading rooms")) {
             showError("No rooms available. Please contact reception.");
             return false;
         }
+
         if (TextDeposite.getText().trim().isEmpty()) {
             showError("Please enter Deposit amount");
             TextDeposite.requestFocus();
             return false;
         }
+
+        String email = TextEmail.getText().trim();
+        if (!email.contains("@") || !email.contains(".")) {
+            showError("Please enter a valid email address");
+            TextEmail.requestFocus();
+            return false;
+        }
+
         return true;
     }
 
@@ -455,34 +653,25 @@ public class E_NewCustomer extends JFrame implements ActionListener {
     private void resetForm() {
         textFieldNumber.setText("");
         TextName.setText("");
+        lastNameField.setText("");
+        TextEmail.setText("");
+        TextPhone.setText("");
         TextCountry.setText("");
         TextDeposite.setText("");
 
-        // إلغاء تحديد الجنس
         ButtonGroup genderGroup = new ButtonGroup();
         genderGroup.add(r1);
         genderGroup.add(r2);
         genderGroup.clearSelection();
 
-        // تحديث قائمة الغرف المتاحة
-        c1.removeAll();
-        try {
-            Z_Con c = new Z_Con();
-            ResultSet rs = c.statement.executeQuery("SELECT roomnumber FROM room WHERE availability='Available'");
-            while (rs.next()) {
-                c1.add(rs.getString("roomnumber"));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        roomComboBox.removeAllItems();
+        loadAvailableRooms();
 
-        // تحديث الوقت
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         dateLabel.setText(formatter.format(new Date()));
     }
 
     public static void main(String[] args) {
-        // إعداد Look and Feel
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {

@@ -152,14 +152,13 @@ public class C_Reception extends JFrame {
         gbc.insets = new Insets(12, 15, 12, 15);
         gbc.weightx = 1.0;
 
-        // Create styled buttons
+        // Create styled buttons (removed Manager Info)
         String[][] buttonData = {
                 {"👤", "New Customer Form", "Register new hotel guests"},
                 {"🛏️", "Room Management", "Manage room availability & status"},
                 {"🏢", "Department", "View hotel departments"},
                 {"👥", "All Employee Info", "Access employee database"},
                 {"📋", "Customer Info", "View guest information"},
-                {"👨‍💼", "Manager Info", "Contact hotel management"},
                 {"🏃‍♂️", "Check Out", "Process guest departures"},
                 {"📝", "Update Check-In", "Modify check-in details"},
                 {"🔄", "Update Room Status", "Change room availability"},
@@ -408,11 +407,10 @@ public class C_Reception extends JFrame {
                         case 2: new G_Department(); break;
                         case 3: new H_Employee(); break;
                         case 4: new I_CustomerInfo(); break;
-                        case 5: new J_ManagerInfo(); break;
-                        case 6: new K_CheckOut(); break;
-                        case 7: new L_UpdateCheck(); break;
-                        case 8: new M_UpdateRoom(); break;
-                        case 9: new N_SearchRoom(); break;
+                        case 5: new K_CheckOut(); break;      // Changed from case 6
+                        case 6: new L_UpdateCheck(); break;   // Changed from case 7
+                        case 7: new M_UpdateRoom(); break;    // Changed from case 8
+                        case 8: new N_SearchRoom(); break;    // Changed from case 9
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();

@@ -165,10 +165,10 @@ public class O_Login2 extends JFrame implements ActionListener {
                 String user = textField1.getText();
                 String pass = new String(passwordField1.getPassword());
 
-                String q = "select * from login2 where user_name = '"+user+"' and password = '"+pass+"'";
+                String q = "select * from login2 where username = '"+user+"' and password = '"+pass+"'";
                 ResultSet resultSet = c.statement.executeQuery(q);
                 if (resultSet.next()){
-                    new B_Dashboard();
+                    new D_admin();
                     setVisible(false);
                 }else {
                     JOptionPane.showMessageDialog(this,

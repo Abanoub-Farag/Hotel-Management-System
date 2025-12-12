@@ -1,89 +1,110 @@
--- Creating the database 
-create database if not exists hotelMS; 
+CREATE DATABASE IF NOT EXISTS hotelMS;
+USE hotelMS;
 
-use hotelMS;
-
--- Employees login
-create table if not exists login(
-	username varchar(25),
-	password varchar(25)
-);
--- 	
--- insert into login (username, password)
--- values ("user", "123456789"), ("a", "a");
-
-
--- Admins login
-create table if not exists login2(
-	user_name varchar(25),
-	password varchar(25)
-);
--- 
--- insert into login2 (user_name, password)
--- values ("user", "123456789"), ("a", "a");
-
--- Room table
-create table if not exists room (
-    roomnumber int primary key,
-    availability varchar(20),
-    cleaning_status varchar(20),
-    price int,
-    bed_type varchar(20)
+-- LOGIN TABLES
+CREATE TABLE IF NOT EXISTS login (
+    username VARCHAR(30) NOT NULL PRIMARY KEY,
+    password VARCHAR(30) NOT NULL
 );
 
--- customers table
--- drop table customer;
-create table if not exists customer (
-    id_type varchar(50),
-    id_number varchar(100),
-    name varchar(100),
-    gender varchar(10),
-    country varchar(100),
-    roomnumber int,
-    checkin_time datetime,
-    deposit int
+CREATE TABLE IF NOT EXISTS login2 (
+    username VARCHAR(30) NOT NULL PRIMARY KEY,
+    password VARCHAR(30) NOT NULL
 );
 
--- Employees table
-create table if not exists employee (
-    name varchar(100),
-    age int,
-    gender varchar(10),
-    job varchar(50),
-    salary int,
-    phone varchar(20),
-    email varchar(100),
-    id_number varchar(100)
+-- ROOM TABLE
+CREATE TABLE IF NOT EXISTS room (
+    room_number INT PRIMARY KEY,
+    availability VARCHAR(30) NOT NULL,
+    cleaning_status VARCHAR(30) NOT NULL,
+    bed_type VARCHAR(30) NOT NULL,
+    price DECIMAL(10,2) NOT NULL
 );
 
--- Depratments table
--- drop table department;
-create table if not exists department(
-	department_id int primary key,
-	department varchar(25),
-	budget int
+-- DEPARTMENT TABLE
+CREATE TABLE IF NOT EXISTS department (
+    department_id INT PRIMARY KEY,
+    department_name VARCHAR(30) NOT NULL,
+    budget DECIMAL(10,2) NOT NULL
 );
 
+-- EMPLOYEE TABLE
+CREATE TABLE IF NOT EXISTS employee (
+    employee_id INT PRIMARY KEY,
+    first_name VARCHAR(15) NOT NULL,
+    last_name VARCHAR(15) NOT NULL,
+    email VARCHAR(60) NOT NULL,
+    phone VARCHAR(25) NOT NULL,
+    age INT NOT NULL,
+    gender VARCHAR(20) NOT NULL,
+    salary DECIMAL(10,2) NOT NULL,
+    department_id INT,
+    hire_date TIMESTAMP NOT NULL,
+    CONSTRAINT fk_emp_dept FOREIGN KEY (department_id)
+        REFERENCES department(department_id)
+        ON DELETE SET NULL ON UPDATE CASCADE
+);
 
--- insert into department (department_id, department, budget)
--- values (1, "Front Desk", 5000),
--- (2, "HouseKeeping", 6000),
--- (3, "Kitchen Staff", 7000),
--- (4, "Room Service", 8000),
--- (5, "Manager", 9000),
--- (6, "Accountant", 10000),
--- (7, "Chef", 12000);
+-- CUSTOMER TABLE
+CREATE TABLE IF NOT EXISTS customer (
+    customer_id INT PRIMARY KEY,
+    id_type VARCHAR(30) NOT NULL,
+    first_name VARCHAR(30) NOT NULL,
+    last_name VARCHAR(30) NOT NULL,
+    email VARCHAR(60) NOT NULL,
+    phone VARCHAR(25) NOT NULL,
+    gender VARCHAR(20) NOT NULL,
+    country VARCHAR(30) NOT NULL,
+    checkin_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    deposit DECIMAL(10,2) NOT NULL,
+    room_number INT,
+    CONSTRAINT fk_cust_room FOREIGN KEY (room_number)
+        REFERENCES room(room_number)
+        ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+-- BOOKINGS TABLE
+CREATE TABLE IF NOT EXISTS bookings (
+    booking_id INT PRIMARY KEY,
+    customer_id INT NOT NULL,
+    room_number INT NOT NULL,
+    status VARCHAR(20) NOT NULL,
+    total_amount DECIMAL(10,2) NOT NULL,
+    checkin_date TIMESTAMP NOT NULL,
+    checkout_date TIMESTAMP NOT NULL,
+    booking_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_booking_cust FOREIGN KEY (customer_id)
+        REFERENCES customer(customer_id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_booking_room FOREIGN KEY (room_number)
+        REFERENCES room(room_number)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- INSERTS FOR DEPARTMENT
+INSERT INTO department (department_id, department_name, budget) VALUES
+(1, 'Front Desk', 5000),
+(2, 'Housekeeping', 6000),
+(3, 'Kitchen Staff', 7000),
+(4, 'Room Service', 8000),
+(5, 'Manager', 9000),
+(6, 'Accountant', 10000),
+(7, 'Chef', 11000);
+
+-- EXAMPLE INSERTS
+INSERT INTO login(username, password) VALUES('pepo123', '123456789');
+INSERT INTO login2(username, password) VALUES('pepo123', '123456789');
+
+-- VERIFY
+SELECT * FROM department;
+SELECT * FROM employee;
+SELECT * FROM login;
+SELECT * FROM room;
+SELECT * FROM customer;
+SELECT * FROM bookings;
 
 
--- select * from department
--- select * from customer 
--- select * from employee
--- select * from login
- select * from login2
--- select * from room
 
 
-
-
-
-
+UPDATE room
+SET cleaning_status = "Clean";
