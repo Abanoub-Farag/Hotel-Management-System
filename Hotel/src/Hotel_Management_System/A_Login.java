@@ -1,4 +1,5 @@
 package Hotel_Management_System;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -32,7 +33,7 @@ public class A_Login extends JFrame implements ActionListener {
                 g2d.fillRect(0, 0, getWidth(), getHeight());
             }
         };
-        mainPanel.setLayout(null);
+        mainPanel.setLayout(null);  
 
         // Title label
         titleLabel = new JLabel("HOTEL LOGIN", SwingConstants.CENTER);
@@ -128,7 +129,7 @@ public class A_Login extends JFrame implements ActionListener {
 
         // Add decorative line
         JSeparator separator = new JSeparator();
-        separator.setBounds(50, 80, 500, 2);
+        separator.setBounds(50, 80, 500, 60);
         separator.setForeground(new Color(255, 215, 0, 100));
         mainPanel.add(separator);
 
@@ -144,44 +145,23 @@ public class A_Login extends JFrame implements ActionListener {
 
         // Center the window on screen
         setSize(600, 350);
-        centerWindow();
+        ZZ_Replications.centerWindow(this);
         setResizable(false);
         setVisible(true);
-    }
-
-    // Method to center the window on screen
-    private void centerWindow() {
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int x = (screenSize.width - getWidth()) / 2;
-        int y = (screenSize.height - getHeight()) / 2;
-        setLocation(x, y);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == b1){
-            try {
-                Z_Con c = new Z_Con();
-                String user = textField1.getText();
-                String pass = new String(passwordField1.getPassword());
-
-                String q = "select * from login where username = '"+user+"' and password = '"+pass+"'";
-                ResultSet resultSet = c.statement.executeQuery(q);
-                if (resultSet.next()){
-                    new B_Dashboard();
-                    setVisible(false);
-                }else {
-                    JOptionPane.showMessageDialog(this,
-                            "Invalid username or password!",
-                            "Login Failed",
-                            JOptionPane.ERROR_MESSAGE);
-                }
-
-            }catch (Exception E){
-                E.printStackTrace();
+            String user = textField1.getText();
+            String pass = new String(passwordField1.getPassword());
+            if(ZZZ_queries.checkLogin1(user, pass)){
+                new B_Dashboard();
+                setVisible(false);
+            }else {
                 JOptionPane.showMessageDialog(this,
-                        "Database connection error!",
-                        "Error",
+                        "Invalid username or password!",
+                        "Login Failed",
                         JOptionPane.ERROR_MESSAGE);
             }
 

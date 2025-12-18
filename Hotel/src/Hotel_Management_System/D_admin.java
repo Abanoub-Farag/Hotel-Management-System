@@ -31,7 +31,7 @@ public class D_admin extends JFrame implements ActionListener {
 
         // Header Panel
         headerPanel = new JPanel();
-        headerPanel.setOpaque(false);
+        headerPanel.setOpaque(false); // see what is behind the panel
         headerPanel.setLayout(new BorderLayout());
         headerPanel.setBorder(BorderFactory.createEmptyBorder(30, 20, 30, 20));
 

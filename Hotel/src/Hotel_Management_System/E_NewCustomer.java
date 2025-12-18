@@ -4,10 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.sql.PreparedStatement;
 
 public class E_NewCustomer extends JFrame implements ActionListener {
     JComboBox<String> comboBox;
@@ -225,7 +223,7 @@ public class E_NewCustomer extends JFrame implements ActionListener {
         ));
 
         // Load available rooms
-        loadAvailableRooms();
+        ZZZ_queries.loadAvailableRooms(roomComboBox);
 
         formPanel.add(roomComboBox);
 
@@ -330,44 +328,6 @@ public class E_NewCustomer extends JFrame implements ActionListener {
         setVisible(true);
     }
 
-    private void loadAvailableRooms() {
-        try {
-            Z_Con c = new Z_Con();
-
-            // Clear existing items
-            roomComboBox.removeAllItems();
-
-            String query = "SELECT room_number FROM room WHERE availability='Available' AND cleaning_status='Clean'";
-            System.out.println("Executing query: " + query);
-
-            ResultSet rs = c.statement.executeQuery(query);
-
-            int roomCount = 0;
-            while (rs.next()) {
-                String roomNumber = rs.getString("room_number");
-                roomComboBox.addItem(roomNumber);
-                roomCount++;
-                System.out.println("Added room: " + roomNumber);
-            }
-
-            System.out.println("Total available rooms: " + roomCount);
-
-            if (roomCount == 0) {
-                System.out.println("No rooms available!");
-                roomComboBox.addItem("No rooms available");
-            }
-
-            rs.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Error loading rooms: " + e.getMessage());
-
-            roomComboBox.removeAllItems();
-            roomComboBox.addItem("Error loading rooms");
-        }
-    }
-
     private JTextField createStyledTextField() {
         JTextField field = new JTextField();
         field.setFont(new Font("Segoe UI", Font.PLAIN, 14));
@@ -455,135 +415,41 @@ public class E_NewCustomer extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == add) {
-            if (!validateForm()) {
-                return;
-            }
 
-            Z_Con c = new Z_Con();
-            String gender = r1.isSelected() ? "Male" : r2.isSelected() ? "Female" : null;
-
-            String idType = (String) comboBox.getSelectedItem();
-            String idNumber = textFieldNumber.getText();
-            String firstName = TextName.getText();
-            String lastName = lastNameField.getText();
-            String email = TextEmail.getText();
-            String phone = TextPhone.getText();
-            String country = TextCountry.getText();
-            String roomNumber = (String) roomComboBox.getSelectedItem(); // CHANGED
-            String checkinDate = dateLabel.getText();
-            String deposit = TextDeposite.getText();
+            if (!validateForm()) return;
 
             try {
-                int customerId;
-                try {
-                    customerId = Integer.parseInt(idNumber);
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(this,
-                            "Customer ID must be a number!",
-                            "Invalid ID",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
+                int customerId = Integer.parseInt(textFieldNumber.getText());
 
-                String checkQuery = "SELECT COUNT(*) FROM customer WHERE customer_id = ?";
-                PreparedStatement checkStmt = c.connection.prepareStatement(checkQuery);
-                checkStmt.setInt(1, customerId);
-                ResultSet rs = checkStmt.executeQuery();
-                if (rs.next() && rs.getInt(1) > 0) {
-                    JOptionPane.showMessageDialog(this,
-                            "Customer ID already exists! Please use a different ID.",
-                            "Duplicate ID",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
+                String gender = r1.isSelected() ? "Male" : "Female";
 
-                String insertQuery = "INSERT INTO customer (customer_id, id_type, first_name, last_name, " +
-                        "email, phone, gender, country, checkin_date, deposit, room_number) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                ZZZ_queries.addCustomer(
+                        customerId,
+                        (String) comboBox.getSelectedItem(),
+                        TextName.getText(),
+                        lastNameField.getText(),
+                        TextEmail.getText(),
+                        TextPhone.getText(),
+                        gender,
+                        TextCountry.getText(),
+                        dateLabel.getText(),
+                        Double.parseDouble(TextDeposite.getText()),
+                        Integer.parseInt((String) roomComboBox.getSelectedItem())
+                );
 
-                PreparedStatement pstmt = c.connection.prepareStatement(insertQuery);
-                pstmt.setInt(1, customerId);
-                pstmt.setString(2, idType);
-                pstmt.setString(3, firstName);
-                pstmt.setString(4, lastName);
-                pstmt.setString(5, email);
-                pstmt.setString(6, phone);
-                pstmt.setString(7, gender);
-                pstmt.setString(8, country);
-                pstmt.setString(9, checkinDate);
-                pstmt.setDouble(10, Double.parseDouble(deposit));
-                pstmt.setInt(11, Integer.parseInt(roomNumber));
-
-                int rowsInserted = pstmt.executeUpdate();
-
-                if (rowsInserted > 0) {
-                    String updateRoom = "UPDATE room SET availability='Occupied' WHERE room_number=" + roomNumber;
-                    c.statement.executeUpdate(updateRoom);
-
-                    try {
-                        String bookingQuery = "SELECT IFNULL(MAX(booking_id), 0) + 1 AS new_id FROM bookings";
-                        ResultSet bookingRs = c.statement.executeQuery(bookingQuery);
-                        int bookingId = 1;
-                        if (bookingRs.next()) {
-                            bookingId = bookingRs.getInt("new_id");
-                        }
-
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                        Date checkin = dateFormat.parse(checkinDate);
-                        Date checkout = new Date(checkin.getTime() + (24 * 60 * 60 * 1000));
-
-                        String priceQuery = "SELECT price FROM room WHERE room_number=" + roomNumber;
-                        ResultSet priceRs = c.statement.executeQuery(priceQuery);
-                        double totalAmount = 0;
-                        if (priceRs.next()) {
-                            totalAmount = priceRs.getDouble("price");
-                        }
-
-                        String insertBooking = "INSERT INTO bookings (booking_id, customer_id, room_number, " +
-                                "status, total_amount, checkin_date, checkout_date, booking_date) " +
-                                "VALUES (?, ?, ?, 'Active', ?, ?, ?, ?)";
-
-                        PreparedStatement bookingStmt = c.connection.prepareStatement(insertBooking);
-                        bookingStmt.setInt(1, bookingId);
-                        bookingStmt.setInt(2, customerId);
-                        bookingStmt.setInt(3, Integer.parseInt(roomNumber));
-                        bookingStmt.setDouble(4, totalAmount);
-                        bookingStmt.setString(5, checkinDate);
-                        bookingStmt.setString(6, dateFormat.format(checkout));
-                        bookingStmt.setString(7, checkinDate);
-
-                        bookingStmt.executeUpdate();
-
-                    } catch (Exception bookingEx) {
-                        bookingEx.printStackTrace();
-                    }
-
-                    JOptionPane.showMessageDialog(this,
-                            "✅ Customer Added Successfully!\n" +
-                                    "Customer ID: " + customerId + "\n" +
-                                    "Name: " + firstName + " " + lastName + "\n" +
-                                    "Room: " + roomNumber + "\n" +
-                                    "Check-in: " + checkinDate.substring(0, 16),
-                            "Registration Complete",
-                            JOptionPane.INFORMATION_MESSAGE);
-
-                    resetForm();
-                }
-
-                pstmt.close();
+                JOptionPane.showMessageDialog(this, "Customer Added Successfully");
+                resetForm();
 
             } catch (Exception ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(this,
-                        "❌ Error adding customer!\n" + ex.getMessage(),
-                        "Registration Error",
-                        JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
+
         } else if (e.getSource() == back) {
             dispose();
             new C_Reception();
         }
     }
+
 
     private boolean validateForm() {
         if (textFieldNumber.getText().trim().isEmpty()) {
@@ -665,7 +531,7 @@ public class E_NewCustomer extends JFrame implements ActionListener {
         genderGroup.clearSelection();
 
         roomComboBox.removeAllItems();
-        loadAvailableRooms();
+        ZZZ_queries.loadAvailableRooms(roomComboBox);
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         dateLabel.setText(formatter.format(new Date()));

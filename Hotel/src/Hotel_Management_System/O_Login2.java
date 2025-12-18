@@ -144,44 +144,23 @@ public class O_Login2 extends JFrame implements ActionListener {
 
         // Center the window on screen
         setSize(600, 350);
-        centerWindow();
+        ZZ_Replications.centerWindow(this);
         setResizable(false);
         setVisible(true);
-    }
-
-    // Method to center the window on screen
-    private void centerWindow() {
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int x = (screenSize.width - getWidth()) / 2;
-        int y = (screenSize.height - getHeight()) / 2;
-        setLocation(x, y);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == b1){
-            try {
-                Z_Con c = new Z_Con();
-                String user = textField1.getText();
-                String pass = new String(passwordField1.getPassword());
-
-                String q = "select * from login2 where username = '"+user+"' and password = '"+pass+"'";
-                ResultSet resultSet = c.statement.executeQuery(q);
-                if (resultSet.next()){
-                    new D_admin();
-                    setVisible(false);
-                }else {
-                    JOptionPane.showMessageDialog(this,
-                            "Invalid username or password!",
-                            "Login Failed",
-                            JOptionPane.ERROR_MESSAGE);
-                }
-
-            }catch (Exception E){
-                E.printStackTrace();
+            String user = textField1.getText();
+            String pass = new String(passwordField1.getPassword());
+            if(ZZZ_queries.checkLogin2(user, pass)){
+                new D_admin();
+                setVisible(false);
+            }else {
                 JOptionPane.showMessageDialog(this,
-                        "Database connection error!",
-                        "Error",
+                        "Invalid username or password!",
+                        "Login Failed",
                         JOptionPane.ERROR_MESSAGE);
             }
 

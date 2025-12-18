@@ -42,17 +42,7 @@ public class B_Dashboard extends JFrame implements ActionListener {
                     // Draw the image with overlay for better text visibility
                     g2d.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
 
-                    // Add dark overlay for better text visibility
-                    g2d.setColor(new Color(0, 0, 0, 120)); // Semi-transparent black overlay
-                    g2d.fillRect(0, 0, getWidth(), getHeight());
 
-                    // Add subtle gradient overlay
-                    GradientPaint gradientOverlay = new GradientPaint(
-                            0, 0, new Color(30, 60, 90, 100), // Deep blue with transparency
-                            getWidth(), getHeight(), new Color(90, 40, 90, 100) // Purple with transparency
-                    );
-                    g2d.setPaint(gradientOverlay);
-                    g2d.fillRect(0, 0, getWidth(), getHeight());
                 } else {
                     // Fallback gradient background - more elegant colors
                     GradientPaint gradient = new GradientPaint(
@@ -73,14 +63,6 @@ public class B_Dashboard extends JFrame implements ActionListener {
                 super.paintComponent(g);
                 Graphics2D g2d = (Graphics2D) g;
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-                // Elegant background with subtle gradient
-                GradientPaint gradient = new GradientPaint(
-                        0, 0, new Color(255, 255, 255, 15),
-                        0, getHeight(), new Color(255, 255, 255, 5)
-                );
-                g2d.setPaint(gradient);
-                g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
 
                 // Subtle border
                 g2d.setColor(new Color(255, 215, 0, 60)); // Soft gold border
@@ -111,14 +93,6 @@ public class B_Dashboard extends JFrame implements ActionListener {
         subtitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         subtitleLabel.setBorder(BorderFactory.createEmptyBorder(15, 0, 0, 0));
 
-        // Elegant icon
-        JLabel iconLabel = new JLabel("🏨");
-        iconLabel.setFont(new Font("Segoe UI", Font.PLAIN, 50));
-        iconLabel.setForeground(new Color(255, 215, 0, 200)); // Transparent gold
-        iconLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        iconLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 15, 0));
-
-        titlePanel.add(iconLabel);
         titlePanel.add(titleLabel);
         titlePanel.add(subtitleLabel);
 
@@ -151,17 +125,6 @@ public class B_Dashboard extends JFrame implements ActionListener {
         gbc.gridy = 0;
         buttonPanel.add(adminBtn, gbc);
 
-        // Add decorative panel between buttons (optional)
-        JPanel centerDecorPanel = new JPanel();
-        centerDecorPanel.setOpaque(false);
-        centerDecorPanel.setPreferredSize(new Dimension(100, 75));
-        centerDecorPanel.setLayout(new BorderLayout());
-
-        JLabel decorLabel = new JLabel("✧", SwingConstants.CENTER);
-        decorLabel.setFont(new Font("Segoe UI", Font.PLAIN, 40));
-        decorLabel.setForeground(new Color(255, 215, 0, 120));
-        centerDecorPanel.add(decorLabel, BorderLayout.CENTER);
-
         gbc.gridx = 1;
         gbc.gridy = 0;
         gbc.gridwidth = 1;
@@ -188,13 +151,6 @@ public class B_Dashboard extends JFrame implements ActionListener {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-
-        // Set window opacity for smooth appearance
-        try {
-            setOpacity(0.98f);
-        } catch (Exception e) {
-            // If opacity not supported
-        }
 
         setVisible(true);
     }
@@ -330,7 +286,7 @@ public class B_Dashboard extends JFrame implements ActionListener {
             // Enhanced animation for bigger button
             animateButtonClick(receptionBtn, true);
             new C_Reception();
-            dispose();
+            dispose(); // close the window
         } else if (e.getSource() == adminBtn) {
             animateButtonClick(adminBtn, true);
             new O_Login2();

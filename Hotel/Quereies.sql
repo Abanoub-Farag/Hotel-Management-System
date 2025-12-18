@@ -102,9 +102,11 @@ SELECT * FROM login;
 SELECT * FROM room;
 SELECT * FROM customer;
 SELECT * FROM bookings;
+SELECT * FROM login2;
 
 
-
+SELECT COUNT(*) FROM room WHERE cleaning_status = 'Dirty';
+SELECT COUNT(*) FROM room WHERE cleaning_status = 'Dirty';
 
 UPDATE room
 SET cleaning_status = "Clean";
